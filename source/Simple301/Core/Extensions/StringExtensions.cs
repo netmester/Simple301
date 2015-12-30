@@ -1,4 +1,8 @@
-﻿namespace Simple301.Core.Extensions
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Simple301.Core.Extensions
 {
     public static class StringExtensions
     {
@@ -13,15 +17,32 @@
         }
 
         /// <summary>
-        /// Ensures that the string starts with the provided
-        /// prefix
+        /// Ensures that the string starts with one 
+        /// of the provided prefixes
         /// </summary>
         /// <param name="s">Current string</param>
-        /// <param name="prefix">Prefix</param>
-        public static string EnsurePrefix(this string s, string prefix)
+        /// <param name="primaryPrefix">used if præfix is missing</param>
+        /// <param name="alternatePrefix"></param>
+        public static string EnsurePrefix(this string s, string primaryPrefix, params string[] alternatePrefix)
+        {
+            return s.EnsurePrefix(StringComparison.InvariantCulture, primaryPrefix, alternatePrefix);
+        }
+
+
+        /// <summary>
+        /// Ensures that the string starts with one 
+        /// of the provided prefixes
+        /// </summary>
+        /// <param name="s">Current string</param>
+        /// <param name="comparison">way to compare</param>
+        /// <param name="primaryPrefix">used if præfix is missing</param>
+        /// <param name="alternatePrefix"></param>
+        public static string EnsurePrefix(this string s, StringComparison comparison, string primaryPrefix, params string[] alternatePrefix)
         {
             if (!s.IsSet()) return string.Empty;
-            return s.StartsWith(prefix) ? s : prefix + s;
+            if (!primaryPrefix.IsSet()) { return s; }
+            var all = new[] { primaryPrefix }.Concat(alternatePrefix);
+            return all.Any(px => s.StartsWith(px, comparison)) ? s : primaryPrefix + s;
         }
     }
 }

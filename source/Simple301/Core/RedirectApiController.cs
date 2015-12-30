@@ -66,7 +66,7 @@ namespace Simple301.Core
             }
             catch (Exception e)
             {
-                return new UpdateRedirectResponse() { Success = false, Message = "There was an error updating the redirect : "+e.Message };
+                return new UpdateRedirectResponse() { Success = false, Message = "There was an error updating the redirect : " + e.Message };
             }
         }
 

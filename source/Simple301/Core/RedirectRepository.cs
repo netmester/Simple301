@@ -52,8 +52,8 @@ namespace Simple301.Core
             if (!newUrl.IsSet()) throw new ArgumentNullException("newUrl");
 
             //Ensure starting slash
-            oldUrl = oldUrl.EnsurePrefix("/").ToLower();
-            newUrl = newUrl.EnsurePrefix("/").ToLower();
+            oldUrl = EnsureStandartLinkFormat(oldUrl);
+            newUrl = EnsureStandartLinkFormat(newUrl);
 
             if (_redirects.ContainsKey(oldUrl)) throw new ArgumentException("A redirect for " + oldUrl + " already exists");
 
@@ -86,9 +86,8 @@ namespace Simple301.Core
             if (!redirect.OldUrl.IsSet()) throw new ArgumentNullException("redirect.OldUrl");
             if (!redirect.NewUrl.IsSet()) throw new ArgumentNullException("redirect.NewUrl");
 
-            //Ensure starting slash
-            redirect.OldUrl = redirect.OldUrl.EnsurePrefix("/").ToLower();
-            redirect.NewUrl = redirect.NewUrl.EnsurePrefix("/").ToLower();
+            redirect.OldUrl = EnsureStandartLinkFormat(redirect.OldUrl);
+            redirect.NewUrl = EnsureStandartLinkFormat(redirect.NewUrl);
 
             var existingRedirect = _redirects.ContainsKey(redirect.OldUrl) ? _redirects[redirect.OldUrl] : null;
             if (existingRedirect != null && existingRedirect.Id != redirect.Id) throw new ArgumentException("A redirect for " + redirect.OldUrl + " already exists");
@@ -103,6 +102,11 @@ namespace Simple301.Core
 
             //return updated redirect
             return redirect;
+        }
+
+        private static string EnsureStandartLinkFormat(string url)
+        {
+            return url.ToLower().EnsurePrefix("/", "http://", "https://");
         }
 
         /// <summary>
